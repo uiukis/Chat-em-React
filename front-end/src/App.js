@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 
+import { Container, Conteudo, Header, Form, Campo, Label, Input, Select, BtnAcessar, HeaderChat, ImgUsuario, NomeUsuario, ChatBox, ConteudoChat, MsgEnviada, DetMsgEnviada, TextoMsgEnviada, MsgRecebida, DetMsgRecebida, TextoMsgRecebida, EnviarMsg, CampoMsg, BtnEnviarMsg } from './styles/styles';
+
 let socket;
 
 function App() {
@@ -10,6 +12,10 @@ function App() {
   const [logado, setLogado] = useState(false);
   const [nome, setNome] = useState("");
   const [sala, setSala] = useState("");
+
+  /*const [logado, setLogado] = useState(true);
+  const [nome, setNome] = useState("Wilker");
+  const [sala, setSala] = useState("1");*/
 
   const [mensagem, setMensagem] = useState("");
   const [listaMensagem, setListaMensagem] = useState([]);
@@ -47,40 +53,66 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>Chat</h1>
+    <Container>
       {!logado ?
-        <>
-          <label>Nome: </label>
-          <input type="text" placeholder="Nome" name="nome" value={nome} onChange={(texto) => { setNome(texto.target.value) }} /><br /><br />
+        <Conteudo>
+          <Header>Meu chat sobre...</Header>
+          <Form>
+            <Campo>
+              <Label>Nome: </Label>
+              <Input type="text" placeholder="Nome" name="nome" value={nome} onChange={(texto) => { setNome(texto.target.value) }} />
+            </Campo>
 
-          <label>Sala: </label>
-          {/*<input type="text" placeholder="Sala" value={sala} onChange={(text) => { setSala(text.target.value) }} /> */}
-          <select name="sala" value={sala} onChange={texto => setSala(texto.target.value)}>
-            <option value="">Selecione</option>
-            <option value="1">Sala 01</option>
-            <option value="2">Sala 02</option>
-            <option value="3">Sala 03</option>
-            <option value="4">Sala 04</option>
-          </select><br /><br />
+            <Campo>
+              <Label>Sala: </Label>
+              <Select name="sala" value={sala} onChange={texto => setSala(texto.target.value)}>
+                <option value="">Selecione</option>
+                <option value="1">Sala 01</option>
+                <option value="2">Sala 02</option>
+                <option value="3">Sala 03</option>
+                <option value="4">Sala 04</option>
+              </Select>
+            </Campo>
 
-          <button onClick={conectarSala}>Acessar</button>
-        </>
+            <BtnAcessar onClick={conectarSala}>Acessar</BtnAcessar>
+          </Form>
+        </Conteudo>
         :
-        <>
-          {listaMensagem.map((msg, key) => {
-            return (
-              <div key={key}>
-                {msg.nome}: {msg.mensagem}
-              </div>
-            )
-          })}
-          <input type="text" name="mensagem" placeholder="Mensagem..." value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
+        <ConteudoChat>
+          <HeaderChat>
+            <ImgUsuario src="1.jpg" alt={nome} />
+            <NomeUsuario>{nome}</NomeUsuario>
+          </HeaderChat>
+          <ChatBox>
+            {listaMensagem.map((msg, key) => {
+              return (
+                <div key={key}>
+                  {nome === msg.nome ?
+                    <MsgEnviada>
+                      <DetMsgEnviada>
+                        <TextoMsgEnviada>{msg.nome} : {msg.mensagem}</TextoMsgEnviada>
+                      </DetMsgEnviada>
+                    </MsgEnviada>
+                    :
+                    <MsgRecebida>
+                      <DetMsgRecebida>
+                        <TextoMsgRecebida>{msg.nome} : {msg.mensagem}</TextoMsgRecebida>
+                      </DetMsgRecebida>
+                    </MsgRecebida>
+                  }
+                </div>
+              )
+            })}
 
-          <button onClick={enviarMensagem}>Enviar</button>
-        </>
+          </ChatBox>
+          <EnviarMsg>
+            <CampoMsg type="text" name="mensagem" placeholder="Mensagem..." value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
+
+            <BtnEnviarMsg type="button" onClick={enviarMensagem}>Enviar</BtnEnviarMsg>
+          </EnviarMsg>
+        </ConteudoChat>
       }
-    </div>
+    </Container>
   );
 }
 

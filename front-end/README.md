@@ -18,3 +18,6 @@ Rodar o projeto React
 
 Socket.IO é uma biblioteca JavaScript para aplicativos da web em tempo real
 ### npm install socket.io-client
+
+Transforma o CSS em componentes
+### npm install --save styled-components
